@@ -31,7 +31,7 @@ PBR.ResetEpo()
 # Settings for the controller. PyLint seems to think constants should be SHOUTED
 AXISLEFT          = 1     # Joystick axis to read up and down
 AXISLEFTINVERTED  = False # Set to true if up and down are inverted
-AXISRIGHT         = 2     # Joystick axis for left/right position
+AXISRIGHT         = 3     # Joystick axis for left/right position
 AXISRIGHTINVERTED = False # Set to true if left and right are swapped
 BUTTONRESETEPO    = 3     # Button number to perform an EP0 reset
 BUTTONSLOW        = 8     # Button number to drive slowly when held
