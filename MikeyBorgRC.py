@@ -29,15 +29,15 @@ if not PBR.foundChip:
 	sys.exit()
 PBR.ResetEpo()
 # Settings for the controller. PyLint seems to think constants should be SHOUTED
-AXISUPDOWN            = 1     # Joystick axis to read up and down
-AXISUPDOWNINVERTED    = False # Set to true if up and down are inverted
-AXISLEFTRIGHT         = 2     # Joystick axis for left/right position
-AXISLEFTRIGHTINVERTED = False # Set to true if left and right are swapped
-BUTTONRESETEPO        = 3     # Button number to perform an EP0 reset
-BUTTONSLOW            = 8     # Button number to drive slowly when held
-SLOWFACTOR            = 0.5   # Speed to slow down to when going slowly
-BUTTONFASTTURN        = 9     # Joystick button for turning fast
-INTERVAL              = 0.00  # Time between updates
+AXISLEFT          = 1     # Joystick axis to read up and down
+AXISLEFTINVERTED  = False # Set to true if up and down are inverted
+AXISRIGHT         = 2     # Joystick axis for left/right position
+AXISRIGHTINVERTED = False # Set to true if left and right are swapped
+BUTTONRESETEPO    = 3     # Button number to perform an EP0 reset
+BUTTONSLOW        = 8     # Button number to drive slowly when held
+SLOWFACTOR        = 0.5   # Speed to slow down to when going slowly
+BUTTONFASTTURN    = 9     # Joystick button for turning fast
+INTERVAL          = 0.00  # Time between updates
 # Set up pygame
 os.environ["SDL_VIDEODRIVER"] = "dummy" # Removes the need to have a GUI window
 pygame.init()
@@ -69,26 +69,14 @@ try:
 				HADEVENT = True
 			if HADEVENT:
 				# Read axis positions
-				if AXISUPDOWNINVERTED:
-					UPDOWN = -JOYSTICK.get_axis(AXISUPDOWN)
+				if AXISLEFTINVERTED:
+					DRIVELEFT = JOYSTICK.get_axis(AXISLEFT)
 				else:
-					UPDOWN = JOYSTICK.get_axis(AXISUPDOWN)
-				if AXISLEFTRIGHTINVERTED:
-					LEFTRIGHT = -JOYSTICK.get_axis(AXISLEFTRIGHT)
+					DRIVELEFT = -JOYSTICK.get_axis(AXISLEFT)
+				if AXISRIGHTINVERTED:
+					DRIVERIGHT = -JOYSTICK.get_axis(AXISRIGHT)
 				else:
-					LEFTRIGHT = JOYSTICK.get_axis(AXISLEFTRIGHT)
-				# Read steering speeds
-				if not JOYSTICK.get_button(BUTTONFASTTURN):
-					LEFTRIGHT *= 0.5
-				# Determine the power levels
-				DRIVELEFT  = -UPDOWN
-				DRIVERIGHT = -UPDOWN
-				# Turning left
-				if LEFTRIGHT < -0.05:
-					DRIVELEFT *= 1.0 + (2.0 * LEFTRIGHT)
-				# Turning right
-				elif LEFTRIGHT > 0.05:
-					DRIVERIGHT *= 1.0 - (2.0 * LEFTRIGHT)
+					DRIVERIGHT = JOYSTICK.get_axis(AXISRIGHT)
 				# Check for button presses
 				if JOYSTICK.get_button(BUTTONRESETEPO):
 					PBR.ResetEpo()
@@ -96,8 +84,8 @@ try:
 					DRIVELEFT  *= SLOWFACTOR
 					DRIVERIGHT *= SLOWFACTOR
 				# Set the motors to the new speeds
-				PBR.SetMotor1(DRIVELEFT)
-				PBR.SetMotor2(-DRIVERIGHT)
+				PBR.SetMotor1(-DRIVERIGHT)
+				PBR.SetMotor2(-DRIVELEFT)
 			# Change the LED to reflect the status of the EP0 latch
 			PBR.SetLed(PBR.GetEpo())
 		# Wait for the interval period
